@@ -29,12 +29,12 @@
 	Более наглядно рабту программы демонстрирует
 	посследовательный цикличный ввод нескольких
 	цифр, например 1, 2, 3.
-	
+
 	Техническая информация:
 		'<' - введённое сообщение
 		'>' - ответ бота
 		"no thought" - ответная реакция не найдена.
-	
+
 	Записывающую головку представляет функция
 	write_round,а её позицию переменная
 	frame_counter
@@ -56,7 +56,7 @@ memory = [MEMORY_SIZE]
 	если бы вы общались с молчаливым собеседником.
 	После достижения критической массы словарного
 	запаса, бот станет отвечать более корректно.
-	
+
 	Возможно усложнение программы включением 3-х
 	составляющих:
 		1.	Поиск событий в бесконечном цикле с
@@ -68,11 +68,11 @@ memory = [MEMORY_SIZE]
 			метаинформации о потребностях и
 			степени их удовлетворения этой
 			реакцией.
-	
+
 	То есть усложнение бота предполагает
 	добавление ему "органов чувств", потребностей,
 	возможности совершать ошибки.
-	
+
 	Представленный ниже код, это базовый скелет с
 	минимальным набором возможностей, расширение
 	которых предполагает только изменение функции
@@ -87,14 +87,14 @@ function brain(event)
 {
 	start = current_position
 	answer = "no thought"
-	
+
 	/*
 		Считывающая головка движется по кольцу памяти
 		пока не вернётся в точку старта или не
 		встретит совпадение событий. В противном
 		случае цикл станет бесконечным.
 	*/
-	
+
 	do
 	{
 		if(memory[current_position] == event)//Место функции сравнения событий
@@ -103,47 +103,47 @@ function brain(event)
 				current_position++
 			else
 				current_position = 0
-			
+
 			answer = memory[current_position]
 			break
 		}
-		
+
 			if(current_position < MEMORY_SIZE - 1)
 				current_position++
 			else
 				current_position = 0
 	}
 	while(current_position != start)
-	
+
 	if(frame_counter < MEMORY_SIZE - 1)
 		frame_counter++
 	else
 		frame_counter = 0
 
 	memory[frame_counter] = event
-	
+
 	return answer
 }
 
 //Обработка событий интерфейса
 
-function InputOnKeyUp()
+function InputOnKeyUp(event)
 {
-	if(window.event.keyCode == 13)
+	if(event.keyCode == 13)
 	{
 		if(input.value == 'del')
 		{
 			DeleteAll()
 			return
 		}
-		
+
 		LoadAll()
-		
+
 		output.value += '<  ' + input.value + '\r\n'
 		output.value += '>  ' + brain(input.value) + '\r\n'
 		input.value = ''
 		output.scrollTop = output.scrollHeight
-		
+
 		SaveAll()
 	}
 }
